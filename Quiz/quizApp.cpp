@@ -20,6 +20,7 @@
 #include <cstdio>
 #include <cstring>
 #include <random>
+#include <cstdlib>
 
 using namespace std;
 
@@ -102,7 +103,7 @@ void MainMenuPrint() {
  * MainMenuOption() function asks the user to input their choice.
  */
 void MainMenuOption(Option &choice) {
-    const int LETTERCASE = 'a' - 'A';
+    const unsigned int LETTERCASE = 'a' - 'A';
 
     int valid = 0;
     char opt;
@@ -156,7 +157,7 @@ void MainMenuOption(Option &choice) {
     Border();
 }
 
-void MainMenu();
+void MainMenu();   // The function is to be used afterwards.
 
 /*
  * CategoriesPrint() function displays question categories on the console.
@@ -250,7 +251,6 @@ void ChooseCategory() {
  */
 bool AddContent(string& myPath, const string& myText, const int level) {
     string line;
-    myPath = "Resources/" + myPath;
 
     ifstream MyFile;
     MyFile.open(myPath, ios::in);
@@ -258,11 +258,14 @@ bool AddContent(string& myPath, const string& myText, const int level) {
         return false;
     }
 
-    ofstream MyWorkFile("Resources/workFile.txt");
+    ofstream MyWorkFile(workSrc);
+
+    // This is how levels are written in the source text files.
+    string lvl = to_string(level) + '.';
 
     getline(MyFile, line);
     MyWorkFile << line << endl;
-    while ((line != to_string(level) + '.') and !MyFile.eof()) {
+    while (line == lvl and !MyFile.eof()) {
         getline(MyFile, line);
         MyWorkFile << line << endl;
     }
@@ -280,7 +283,7 @@ bool AddContent(string& myPath, const string& myText, const int level) {
     MyFile.close();
     MyWorkFile.close();
 
-    char oldName[] = "Resources/workFile.txt";
+    char oldName[] = workSrc;
     char newName[myPath.length()];
     strcpy(newName, myPath.c_str());
 
@@ -307,7 +310,7 @@ string GenerateID(const char& topic, const int lvl) {
  */
 void Redirect(){
     char key;
-    Print(CENTER, "Press ENTER continue...", LINE);
+    Print(CENTER, "Press any key and ENTER continue...", LINE);
     cout << '\n';
     cin >> key;
     MainMenu();
@@ -330,7 +333,7 @@ void GetWholeLine(string& str) {
  */
 void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sourceFile) {
     int topic;
-    char answer;
+    string answer;
     string ansA,
            ansB,
            ansC,
@@ -360,27 +363,27 @@ void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sou
     switch (topic) {
         case Geography: {
             topicSmbl = 'g';
-            sourceFile = "geography.txt";
+            sourceFile = geoSrc;
         }
             break;
         case History: {
             topicSmbl = 'h';
-            sourceFile = "history.txt";
+            sourceFile = histSrc;
         }
             break;
         case Literature: {
             topicSmbl = 'l';
-            sourceFile = "literature.txt";
+            sourceFile = litSrc;
         }
             break;
         case Physics: {
             topicSmbl = 'p';
-            sourceFile = "physics.txt";
+            sourceFile = physSrc;
         }
             break;
         case Politics: {
             topicSmbl = 'P';
-            sourceFile = "politics.txt";
+            sourceFile = polSrc;
         }
             break;
         default:
@@ -429,7 +432,7 @@ void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sou
     cin >> answer;
 
     // Handle invalid input.
-    while (answer != 'A' and answer != 'B' and answer != 'C' and answer != 'D') {
+    while (!(answer == "A" or answer == "B" or answer == "C" or answer == "D")) {
         cin.clear();
         cin.ignore();
         cout << termcolor::color<INDIAN_RED> << '\n';
@@ -439,7 +442,7 @@ void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sou
     }
 
     // Insert a '*' in front of the correct answer.
-    switch (answer) {
+    switch (answer[0]) {
         case 'A': {
             ansA = '*' + ansA;
         }
@@ -485,15 +488,169 @@ void AddQuestion() {
         Redirect();
     }
     else {
-        cout << termcolor::color<INDIAN_RED> << "Trouble adding new question!";
+        cout << termcolor::color<INDIAN_RED>;
+        Print (CENTER, "Sorry, the question could not be added!", LINE);
         Redirect();
         return;
     }
 }
 
+/*
+ * RemoveQuestion() function removes the information for a whole question
+ * starting from its ID number (startPoint) from a text file with the path pathName.
+ */
+bool RemoveQuestion(const string& pathName, const string& startPoint) {
+    string line;
+
+    // Check if source file is open.
+    ifstream MyFile;
+    MyFile.open(pathName, ios::in);
+    if (!MyFile.is_open()) {
+        return false;
+    }
+
+    // Create a new file and copy the questions that need to be kept.
+    ofstream MyWorkFile(workSrc);
+
+    getline(MyFile, line);
+    while (!(line == startPoint or MyFile.eof())) {
+        MyWorkFile << line << endl;
+        getline(MyFile, line);
+    }
+
+    // When startPoint (the question ID number) is reached, the whole question is skipped.
+    if (line == startPoint) {
+        for (int cnt = 0; cnt <= 5; ++cnt) {
+            getline(MyFile, line);
+        }
+    }
+
+    // The rest of the questions are copied to MyWorkFile.
+    while (getline(MyFile, line)) {
+        MyWorkFile << line << endl;
+    }
+
+    if (!MyFile.eof()) {
+        return false;
+    }
+
+    MyFile.close();
+    MyWorkFile.close();
+
+    char oldName[] = workSrc;
+    char newName[pathName.length()];
+    strcpy(newName, pathName.c_str());
+
+    // Remove the file with the question that had to be deleted.
+    if (remove(newName) != 0) {
+        return false;
+    }
+    // Rename MyWorkFile so that it has the same name as MyFile.
+    // The renamed file stores the questions from MyFile without the one that had to be deleted.
+    if (rename(oldName, newName) != 0) {
+        return false;
+    }
+    return true;
+}
 
 /*
- * ChooseMenuOptn() function displays main menu and gets user's choice.
+ * SearchFile() function checks if myText is in the text file with pathName.
+ */
+bool SearchFile(const string& myText, const string& pathName) {
+    string line;
+
+    ifstream MyFile;
+    MyFile.open(pathName, ios::in);
+    if (!MyFile.is_open()) {
+        return false;
+    }
+
+    // Read file while myText is not found.
+    getline(MyFile, line);
+    while ((line != myText) and !MyFile.eof()) {
+        getline(MyFile, line);
+    }
+
+    // If myText is found, remove the question from the file.
+    if (line == myText) {
+        MyFile.close();
+        if (RemoveQuestion(pathName, myText)) {
+            return true;
+        }
+        return false;
+    }
+    MyFile.close();
+    return false;
+}
+
+/*
+ * Substitute() function gets the info for the question with a number idNum
+ * that needs to be modified and adds it to the corresponding source file.
+ */
+void Substitute(const string& idNum) {
+    int level;
+    char topic;
+    string question,
+           pathName;
+
+    // Read the new information about the question.
+    TakeQuestionInfo(level, topic, question, (string &) pathName);
+
+    // Question's ID number remains unchanged.
+    string myText = idNum + "\n" + question;
+
+    // Add the modified question to the source file for its category.
+    if (AddContent((string &) pathName, myText, level)) {
+        cout << termcolor::color<SPRING_GREEN>;
+        Print(CENTER, "The question has been successfully modified!\n", LINE);
+        Redirect();
+        return;
+        }
+
+    // Display a message, if the process has failed.
+    cout << termcolor::color<INDIAN_RED>;
+    Print(CENTER, "Sorry, the question could not be modified!\n", LINE);
+    Redirect();
+}
+
+/*
+ * ModifyQuestion() searches for an existing question and modifies its information.
+ */
+void ModifyQuestion() {
+    string idNum;
+
+    // Choose a question ID number.
+    cout << termcolor::color<SPRING_GREEN>;
+    Print(CENTER, "Please, enter the ID number of the question: ", LINE);
+    cin >> idNum;
+    cout << "\n";
+
+    // Check if the question exists among the source files for each category.
+    if (SearchFile(idNum, geoSrc)) {
+        Substitute(idNum);                      // start modification
+    }
+    if (SearchFile(idNum, histSrc)) {
+        Substitute(idNum);                      // start modification
+    }
+    if (SearchFile(idNum, litSrc)) {
+        Substitute(idNum);                      // start modification
+    }
+    if (SearchFile(idNum, physSrc)) {
+        Substitute(idNum);                      // start modification
+    }
+    if (SearchFile(idNum, polSrc)) {
+        Substitute(idNum);                      // start modification
+    }
+
+    // Display a message if the question does not exist.
+    cout << termcolor::color<INDIAN_RED>;
+    Print(CENTER, "The question does not exist!", LINE);
+    cout << termcolor::color<SPRING_GREEN>;
+    Redirect();
+}
+
+/*
+ * MainMenu() function displays main menu and gets user's choice.
  */
 void MainMenu() {
     Option choice;
@@ -503,10 +660,11 @@ void MainMenu() {
         case AddQ: {
             AddQuestion();
         }
-        break;
+            break;
         case NewGame:
             break;
         case ModifyQ:
+            ModifyQuestion();
             break;
         case ExitGame:
             break;
