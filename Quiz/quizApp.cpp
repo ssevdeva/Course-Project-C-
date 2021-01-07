@@ -23,10 +23,17 @@
 
 using namespace std;
 
-const int INDIAN_RED = 203,
-          SPRING_GREEN = 121;
+#define geoSrc "Resources/geography.txt"
+#define histSrc "Resources/history.txt"
+#define litSrc "Resources/literature.txt"
+#define physSrc "Resources/physics.txt"
+#define polSrc "Resources/politics.txt"
+#define workSrc "Resources/workFile.txt"
 
-const int LINE = 80;
+
+const int INDIAN_RED = 203,
+          SPRING_GREEN = 121,
+          LINE = 80;
 
 enum Option {
     NewGame = 'N', AddQ = 'A', ModifyQ = 'M', ExitGame = 'E'
@@ -319,18 +326,17 @@ void GetWholeLine(string& str) {
 }
 
 /*
- * AddQuestion() adds a new question in a category.
+ * TakeQuestionInfo() function asks the user to enter a question and saves the input info.
  */
-void AddQuestion() {
+void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sourceFile) {
     int topic;
-    int level;
-    string question,
-           ansA,
+    char answer;
+    string ansA,
            ansB,
            ansC,
            ansD;
-    char answer;
 
+    // Choose a question category.
     cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "Choose a category for the question", LINE);
     cout << "\n\n";
@@ -338,6 +344,8 @@ void AddQuestion() {
     Print(CENTER, "Enter: ", LINE);
 
     cin >> topic;
+
+    // Handle invalid input.
     while (topic < 1 or topic > 5 or cin.fail()) {
         cin.clear();
         cin.ignore();
@@ -348,32 +356,30 @@ void AddQuestion() {
     }
     cout << '\n';
 
-    char t;
-    string sourceFile;
-
+    // Choose a source text file according to the selected category.
     switch (topic) {
         case Geography: {
-            t = 'g';
+            topicSmbl = 'g';
             sourceFile = "geography.txt";
         }
             break;
         case History: {
-            t = 'h';
+            topicSmbl = 'h';
             sourceFile = "history.txt";
         }
             break;
         case Literature: {
-            t = 'l';
+            topicSmbl = 'l';
             sourceFile = "literature.txt";
         }
             break;
         case Physics: {
-            t = 'p';
+            topicSmbl = 'p';
             sourceFile = "physics.txt";
         }
             break;
         case Politics: {
-            t = 'P';
+            topicSmbl = 'P';
             sourceFile = "politics.txt";
         }
             break;
@@ -381,9 +387,12 @@ void AddQuestion() {
             break;
     }
 
+    // Choose a question category.
     cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "Choose a level of difficulty (1 - 10): ", LINE);
     cin >> level;
+
+    // Handle invalid input.
     while (level < 1 or level > 10 or cin.fail()) {
         cin.clear();
         cin.ignore();
@@ -393,10 +402,13 @@ void AddQuestion() {
         cin >> level;
     }
     cout << '\n';
+
+    // Enter a new question.
     cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "Please, enter your question: \n", LINE);
     GetWholeLine(question);
 
+    // Enter optional answers for the question.
     cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "Please, enter the answers: \n", LINE);
     cout << "A) ";
@@ -412,9 +424,11 @@ void AddQuestion() {
     GetWholeLine(ansD);
     ansD = "D) " + ansD;
 
+    // Choose the correct answer.
     cout << "Correct answer: ";
     cin >> answer;
 
+    // Handle invalid input.
     while (answer != 'A' and answer != 'B' and answer != 'C' and answer != 'D') {
         cin.clear();
         cin.ignore();
@@ -424,6 +438,7 @@ void AddQuestion() {
         cin >> answer;
     }
 
+    // Insert a '*' in front of the correct answer.
     switch (answer) {
         case 'A': {
             ansA = '*' + ansA;
@@ -444,10 +459,26 @@ void AddQuestion() {
         default:
             break;
     }
+    // Save the question and the answers for it in question variable.
     question = question + "\n" + ansA + "\n" + ansB + "\n" + ansC + "\n" + ansD + "\n";
     Border();
+}
 
-    string addText = GenerateID(t, level) + "\n" + question;
+/*
+ * AddQuestion() adds a new question in a category.
+ */
+void AddQuestion() {
+    int level;
+    char topicSmbl;
+    string question,
+           sourceFile;
+
+    TakeQuestionInfo(level, topicSmbl, question, sourceFile);
+
+    // Generate an ID number for the new question and add it to question variable.
+    string addText = GenerateID(topicSmbl, level) + "\n" + question;
+
+    // Add all the info for the new question to the corresponding sourceFile if possible.
     if (AddContent(sourceFile, addText, level)) {
         cout << termcolor::color<SPRING_GREEN> << '\n';
         Print(CENTER, "The question has been successfully added!\n", LINE);
@@ -459,6 +490,7 @@ void AddQuestion() {
         return;
     }
 }
+
 
 /*
  * ChooseMenuOptn() function displays main menu and gets user's choice.
