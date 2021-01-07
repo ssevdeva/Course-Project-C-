@@ -650,6 +650,16 @@ void ModifyQuestion() {
 }
 
 /*
+ * ExitFunc() function displays a final message and terminates the game.
+ */
+void ExitFunc() {
+    cout << termcolor::white;
+    Print(CENTER, "Thank you for playing! :)", LINE);
+    cout << '\n';
+    exit(EXIT_SUCCESS);
+}
+
+/*
  * MainMenu() function displays main menu and gets user's choice.
  */
 void MainMenu() {
@@ -667,6 +677,7 @@ void MainMenu() {
             ModifyQuestion();
             break;
         case ExitGame:
+            ExitFunc();
             break;
     }
 }
