@@ -17,8 +17,6 @@
 #include "Resources/termcolor.hpp"
 #include <string>
 #include <fstream>
-#include <cstdio>
-#include <cstring>
 #include <cstdlib>
 
 #include "myConstants.h"
@@ -224,36 +222,6 @@ void AddQuestion() {
         Redirect();
         return;
     }
-}
-
-/*
- * SearchFile() function checks if myText is in the text file with pathName.
- */
-bool SearchFile(const string& myText, const string& pathName) {
-    string line;
-
-    ifstream MyFile;
-    MyFile.open(pathName, ios::in);
-    if (!MyFile.is_open()) {
-        return false;
-    }
-
-    // Read file while myText is not found.
-    getline(MyFile, line);
-    while ((line != myText) and !MyFile.eof()) {
-        getline(MyFile, line);
-    }
-
-    // If myText is found, remove the question from the file.
-    if (line == myText) {
-        MyFile.close();
-        if (RemoveQuestion(pathName, myText)) {
-            return true;
-        }
-        return false;
-    }
-    MyFile.close();
-    return false;
 }
 
 /*

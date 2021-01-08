@@ -17,18 +17,19 @@
 #define QUIZ_MYCONTENTEDITORS_H
 
 #include <iostream>
-#include "Resources/termcolor.hpp"
 #include <string>
+#include <cstring>
+#include <fstream>
 
 #include "myConstants.h"
-#include "myBasicFuncs.h"
+#include "myTakeQuestionFunc.h"
 
 using namespace std;
-
-void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sourceFile);
 
 bool AddContent(string& myPath, const string& myText, int level);
 
 bool RemoveQuestion(const string& pathName, const string& startPoint);
+
+bool SearchFile(const string& myText, const string& pathName);
 
 #endif //QUIZ_MYCONTENTEDITORS_H
