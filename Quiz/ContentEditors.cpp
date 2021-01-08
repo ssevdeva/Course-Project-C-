@@ -18,8 +18,8 @@
 #include <cstring>
 #include <fstream>
 
-#include "myConstants.h"
-#include "myTakeQuestionFunc.h"
+#include "Structs_Constants.h"
+#include "TakeQuestionFunc.h"
 
 using namespace std;
 

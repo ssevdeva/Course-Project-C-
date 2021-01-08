@@ -17,8 +17,8 @@
 #include "Resources/termcolor.hpp"
 #include <string>
 
-#include "myConstants.h"
-#include "myBasicFuncs.h"
+#include "Structs_Constants.h"
+#include "BasicFuncs.h"
 
 using namespace std;
 
@@ -28,7 +28,7 @@ using namespace std;
 void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sourceFile) {
     int topic;
     string answer;
-    string ansA,
+    string  ansA,
             ansB,
             ansC,
             ansD;

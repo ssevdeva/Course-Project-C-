@@ -17,8 +17,8 @@
 #include "Resources/termcolor.hpp"
 #include <string>
 
-#include "myConstants.h"
-#include "myBasicFuncs.h"
+#include "Structs_Constants.h"
+#include "BasicFuncs.h"
 
 using namespace std;
 

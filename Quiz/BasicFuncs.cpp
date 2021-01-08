@@ -18,7 +18,7 @@
 #include <string>
 #include <random>
 
-#include "myConstants.h"
+#include "Structs_Constants.h"
 
 using namespace std;
 
@@ -70,7 +70,7 @@ void GetWholeQuestion(string& str) {
     str = "";
 
     cin >> str1;
-    str += str1;
+    str += (' ' + str1);
     while (str1[str1.length() - 1] != '?')
     {
         cin.ignore();
@@ -96,8 +96,8 @@ void GetWholeAnswer(string& str) {
  * GenerateID() function generates an ID code for each question.
  */
 string GenerateID(const char& topic, const int lvl) {
-    std::random_device dev;
-    (std::mt19937(dev()));
+    random_device dev;
+    (mt19937(dev()));
     return ('#' + to_string(lvl) + topic + to_string(dev()));
 }
 

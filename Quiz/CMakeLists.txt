@@ -3,5 +3,5 @@ project(Quiz)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Quiz quizApp.cpp myConstants.cpp myConstants.h myBasicFuncs.cpp myBasicFuncs.h myContentEditors.cpp myContentEditors.h myTakeQuestionFunc.cpp myTakeQuestionFunc.h)
+add_executable(Quiz quizApp.cpp Structs_Constants.h BasicFuncs.cpp BasicFuncs.h ContentEditors.cpp ContentEditors.h TakeQuestionFunc.cpp TakeQuestionFunc.h)
 

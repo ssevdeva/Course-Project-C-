@@ -13,8 +13,8 @@
 *
 */
 
-#ifndef QUIZ_MYCONSTANTS_H
-#define QUIZ_MYCONSTANTS_H
+#ifndef QUIZ_STRUCTS_CONSTANTS_H
+#define QUIZ_STRUCTS_CONSTANTS_H
 
 #define GEO_SRC "Resources/geography.txt"
 #define HIST_SRC "Resources/history.txt"
@@ -25,7 +25,9 @@
 
 const int INDIAN_RED = 203;
 const int SPRING_GREEN = 121;
+const int TURQUOISE = 45;
 const int LINE = 80;
+const int gameQuestions = 15;
 
 enum Option {
     NewGame = 'N', AddQ = 'A', ModifyQ = 'M', ExitGame = 'E'
@@ -37,4 +39,13 @@ enum Position {
     LEFT, CENTER, RIGHT
 };
 
-#endif //QUIZ_MYCONSTANTS_H
+struct Question {
+    std::string quesText,
+            ansA,
+            ansB,
+            ansC,
+            ansD;
+    char answer;
+};
+
+#endif //QUIZ_STRUCTS_CONSTANTS_H

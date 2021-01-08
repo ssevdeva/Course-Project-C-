@@ -13,15 +13,15 @@
 *
 */
 
-#ifndef QUIZ_MYBASICFUNCS_H
-#define QUIZ_MYBASICFUNCS_H
+#ifndef QUIZ_BASICFUNCS_H
+#define QUIZ_BASICFUNCS_H
 
 #include <iostream>
 #include "Resources/termcolor.hpp"
 #include <string>
 #include <random>
 
-#include "myConstants.h"
+#include "Structs_Constants.h"
 using namespace std;
 
 void Print(Position pos, const string &s, int linelength);
@@ -37,4 +37,4 @@ void GetWholeAnswer(string& str);
 string GenerateID(const char& topic, int lvl);
 
 
-#endif //QUIZ_MYBASICFUNCS_H
+#endif //QUIZ_BASICFUNCS_H

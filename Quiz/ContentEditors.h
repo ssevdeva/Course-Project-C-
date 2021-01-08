@@ -13,16 +13,16 @@
 *
 */
 
-#ifndef QUIZ_MYCONTENTEDITORS_H
-#define QUIZ_MYCONTENTEDITORS_H
+#ifndef QUIZ_CONTENTEDITORS_H
+#define QUIZ_CONTENTEDITORS_H
 
 #include <iostream>
 #include <string>
 #include <cstring>
 #include <fstream>
 
-#include "myConstants.h"
-#include "myTakeQuestionFunc.h"
+#include "Structs_Constants.h"
+#include "TakeQuestionFunc.h"
 
 using namespace std;
 
@@ -32,4 +32,4 @@ bool RemoveQuestion(const string& pathName, const string& startPoint);
 
 bool SearchFile(const string& myText, const string& pathName);
 
-#endif //QUIZ_MYCONTENTEDITORS_H
+#endif //QUIZ_CONTENTEDITORS_H
