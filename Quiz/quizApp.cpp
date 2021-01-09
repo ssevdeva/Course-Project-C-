@@ -733,34 +733,42 @@ void Substitute(const string &idNum) {
  */
 void ModifyQuestion() {
     string idNum;
+    bool doExist = false;
 
-    // Choose a question ID number.
-    cout << termcolor::color<SPRING_GREEN>;
-    Print(CENTER, "Please, enter the ID number of the question: ", LINE);
-    cin >> idNum;
-    cout << "\n";
+    while (!doExist) {
+        // Choose a question ID number.
+        cout << termcolor::color<SPRING_GREEN>;
+        Print(CENTER, "Please, enter the ID number of the question: ", LINE);
+        cin >> idNum;
+        cout << "\n";
 
-    // Check if the question exists among the source files for each category.
-    if (SearchFile(idNum, GEO_SRC)) {
-        Substitute(idNum);                      // start modification
-    }
-    if (SearchFile(idNum, HIST_SRC)) {
-        Substitute(idNum);                      // start modification
-    }
-    if (SearchFile(idNum, LIT_SRC)) {
-        Substitute(idNum);                      // start modification
-    }
-    if (SearchFile(idNum, PHYS_SRC)) {
-        Substitute(idNum);                      // start modification
-    }
-    if (SearchFile(idNum, POL_SRC)) {
-        Substitute(idNum);                      // start modification
-    }
+        // Check if the question exists among the source files for each category.
+        if (SearchFile(idNum, GEO_SRC)) {
+            doExist = true;
+            Substitute(idNum);                      // start modification
+        }
+        if (SearchFile(idNum, HIST_SRC)) {
+            doExist = true;
+            Substitute(idNum);                      // start modification
+        }
+        if (SearchFile(idNum, LIT_SRC)) {
+            doExist = true;
+            Substitute(idNum);                      // start modification
+        }
+        if (SearchFile(idNum, PHYS_SRC)) {
+            doExist = true;
+            Substitute(idNum);                      // start modification
+        }
+        if (SearchFile(idNum, POL_SRC)) {
+            doExist = true;
+            Substitute(idNum);                      // start modification
+        }
 
-    // Display a message if the question does not exist.
-    cout << termcolor::color<INDIAN_RED>;
-    Print(CENTER, "The question does not exist!", LINE);
-    cout << termcolor::color<SPRING_GREEN>;
+        // Display a message if the question does not exist.
+        cout << termcolor::color<INDIAN_RED>;
+        Print(CENTER, "The question does not exist!", LINE);
+        cout << termcolor::color<SPRING_GREEN>;
+    }
     Redirect();
 }
 
