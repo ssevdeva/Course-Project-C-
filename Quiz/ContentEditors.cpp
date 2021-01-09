@@ -29,26 +29,31 @@ using namespace std;
 bool AddContent(string& myPath, const string& myText, const int level) {
     string line;
 
+    // Open MyFile in order to read from it.
     ifstream MyFile;
     MyFile.open(myPath, ios::in);
     if (!MyFile.is_open()) {
         return false;
     }
 
+    // Open MyWorkFile in order to write in it.
     ofstream MyWorkFile(WORK_SRC);
 
     // This is how levels are written in the source text files.
     string lvl = to_string(level) + '.';
 
+    // Copy questions from MyFile to MyWorkFile until searched level is reached.
     getline(MyFile, line);
     MyWorkFile << line << endl;
-    while (line == lvl and !MyFile.eof()) {
+    while (!(line == lvl or MyFile.eof())) {
         getline(MyFile, line);
         MyWorkFile << line << endl;
     }
 
+    // Include the new content in MyWorkFile.
     MyWorkFile << myText << endl;
 
+    // Copy the rest of the questions from MyFile to MyWorkFile.
     while (getline(MyFile, line)) {
         MyWorkFile << line << endl;
     }
@@ -64,6 +69,7 @@ bool AddContent(string& myPath, const string& myText, const int level) {
     char newName[myPath.length()];
     strcpy(newName, myPath.c_str());
 
+    // Remove MyFile and rename MyWorkFile after MyFile.
     if (remove(newName) != 0) {
         return false;
     }

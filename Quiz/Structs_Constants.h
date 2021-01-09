@@ -23,11 +23,41 @@
 #define POL_SRC "Resources/politics.txt"
 #define WORK_SRC "Resources/workFile.txt"
 
-const int INDIAN_RED = 203;
-const int SPRING_GREEN = 121;
-const int TURQUOISE = 45;
+// Colour codes.
+const int INDIAN_RED = 203,
+          SPRING_GREEN = 121,
+          CHARTEUSE = 118;
+
+const unsigned int LETTERCASE = 'a' - 'A';
+
+// Length of game field.
 const int LINE = 80;
-const int gameQuestions = 15;
+
+// Game specifications.
+const int QUESTIONS_IN_GAME = 15;
+
+// Categories limits.
+const int LAST_EASY = 3,
+          LAST_MILD = 7,
+          LAST_HARD = 10;
+
+// Game stages.
+const int FIRST_STAGE = 5,
+          SECOND_STAGE = 10,
+          LAST_STAGE = 15;
+
+// Prizing stages.
+const int STAGE1 = 3,
+          STAGE2 = 11,
+          STAGE3 = 14;
+
+// Game prizes.
+const int INITIAL_PRIZE = 100,
+          FORTH_PRIZE = 500,
+          TWELFTH_PRIZE = 125000,
+          THE_GRAND_MILLION = 1000000;
+
+
 
 enum Option {
     NewGame = 'N', AddQ = 'A', ModifyQ = 'M', ExitGame = 'E'
@@ -40,7 +70,7 @@ enum Position {
 };
 
 struct Question {
-    std::string quesText,
+    std::string questText,
             ansA,
             ansB,
             ansC,
