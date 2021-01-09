@@ -18,8 +18,8 @@
 #include <cstring>
 #include <fstream>
 
-#include "Structs_Constants.h"
-#include "TakeQuestionFunc.h"
+#include "structsNconstants.h"
+#include "takeQuestionFuncs.h"
 
 using namespace std;
 
@@ -165,4 +165,32 @@ bool SearchFile(const string& myText, const string& pathName) {
     }
     MyFile.close();
     return false;
+}
+
+/*
+ * Substitute() function gets the info for the question with a number idNum
+ * that needs to be modified and adds it to the corresponding source file.
+ */
+void Substitute(const string &idNum) {
+    int level;
+    char topic;
+    string question,
+            pathName;
+
+    // Read the new information about the question.
+    TakeQuestionInfo(level, topic, question, (string &) pathName);
+
+    // Question's ID number remains unchanged.
+    string myText = idNum + "\n" + question;
+
+    // Add the modified question to the source file for its category.
+    if (AddContent((string &) pathName, myText, level)) {
+        cout << termcolor::color<SPRING_GREEN>;
+        Print(CENTER, "The question has been successfully modified!\n", LINE);
+        return;
+    }
+
+    // Display a message, if the process has failed.
+    cout << termcolor::color<INDIAN_RED>;
+    Print(CENTER, "Sorry, the question could not be modified!\n", LINE);
 }
