@@ -56,7 +56,7 @@ void Border() {
  */
 void TitleBar() {
     string s = " WHO WANTS TO BE A MILLIONAIRE ";
-    string header(LINE / 2 - s.length() / 2, '=');
+    string header(LINE / 2 - s.length() / 2 - 1, '=');
     cout << termcolor::color<SPRING_GREEN> << header;
     cout << s;
     cout << header << '\n';
@@ -66,17 +66,25 @@ void TitleBar() {
  * GetWholeAnswer() function reads from the console and saves the input with its whitespaces in str.
  */
 void GetWholeQuestion(string& str) {
-    string str1;
+    /*string str1;
     str = "";
 
     cin >> str1;
-    str += (' ' + str1);
+    str = str1;
     while (str1[str1.length() - 1] != '?')
     {
         cin.ignore();
         cin.clear();
         cin >> str1;
-        str += str1;
+        str += (' ' + str1);
+    }*/
+    char input[LINE];
+    cin >> str;
+    while(str[str.length() - 1] != '?') {
+        cin.getline(input, LINE);
+        for (int i = 0; input[i] != '\0'; ++i) {
+            str +=input[i];
+        }
     }
 }
 

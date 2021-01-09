@@ -17,7 +17,7 @@
 #include "Resources/termcolor.hpp"
 #include <string>
 #include <cstdlib>
-#include <ctime>
+#include <iomanip>
 
 #include "Structs_Constants.h"
 #include "BasicFuncs.h"
@@ -42,8 +42,6 @@ void MainMenuPrint() {
  * MainMenuOption() function asks the user to input their choice.
  */
 void MainMenuOption(Option &choice) {
-    const unsigned int LETTERCASE = 'a' - 'A';
-
     int valid = 0;
     char opt;
 
@@ -179,13 +177,12 @@ void CategoriesOption(Category &topic) {
         }
     }
     cout << '\n';
-    Border();
 }
 
 /*
  * ChooseCategory() function displays all categories and gets user's choice of topic.
  */
-void ChooseCategory(Category& topic) {
+void ChooseCategory(Category &topic) {
     CategoriesPrint();
     CategoriesOption(topic);
 }
@@ -193,11 +190,9 @@ void ChooseCategory(Category& topic) {
 /*
  * Redirect() function returns the user to the main menu.
  */
-void Redirect(){
-    char key;
-    Print(CENTER, "Press any key and ENTER continue...", LINE);
-    cout << '\n';
-    cin >> key;
+void Redirect() {
+    Print(CENTER, "Press ENTER to continue...\n", LINE);
+    cin.ignore( std::numeric_limits<std::streamsize>::max(), '\n' );
     MainMenu();  // return to the main menu
 }
 
@@ -205,13 +200,13 @@ void Redirect(){
  * GetLevel() function reads all questions of a single level from ReadFile copies
  * them in WriteFile. Each question receives a next number in front of its ID.
  */
-void GetLevel(int lvl, ifstream& ReadFile, ofstream& WriteFile, int& numOfQuest) {
+void GetLevel(int lvl, ifstream &ReadFile, ofstream &WriteFile, int &numOfQuest) {
     string line;
 
     getline(ReadFile, line);  // first question ID
 
     // Gather questions of lvl. until start of next lvl. questions is not reached.
-    while(line != (to_string(lvl + 1) + '.') and !ReadFile.eof()) {
+    while (line != (to_string(lvl + 1) + '.') and !ReadFile.eof()) {
         // Put the number of the question before its ID.
         if (line[0] == '#') {
             ++numOfQuest;
@@ -232,7 +227,7 @@ void GetLevel(int lvl, ifstream& ReadFile, ofstream& WriteFile, int& numOfQuest)
 * GatherAllQuestions() function reads all questions of all categories and saves them in a file
  * with a path called newFilePath. Each question receives a next number in front of its ID.
 */
-bool GatherAllQuestions(string& newFilePath, int& easy, int& mild, int& hard){
+bool GatherAllQuestions(string &newFilePath, int &easy, int &mild, int &hard) {
     string line;
 
     // Open all source files in order to get the questions.
@@ -270,7 +265,7 @@ bool GatherAllQuestions(string& newFilePath, int& easy, int& mild, int& hard){
     newFilePath = WORK_SRC;
     ofstream MyWorkFile(newFilePath);
 
-    MyWorkFile << "EASY:" << endl; // Start gathering the easy questions (lvl. 1 - 3).
+    MyWorkFile << "EASY" << endl; // Start gathering the easy questions (lvl. 1 - 3).
     getline(MyFirstFile, line);  // 1.
     getline(MySecondFile, line);  // 1.
     getline(MyThirdFile, line);  // 1.
@@ -286,7 +281,7 @@ bool GatherAllQuestions(string& newFilePath, int& easy, int& mild, int& hard){
     }
 
     MyWorkFile << '\n';
-    MyWorkFile << "MILD:" << endl; // Start gathering the mild questions (lvl. 4 - 7).
+    MyWorkFile << "MILD" << endl; // Start gathering the mild questions (lvl. 4 - 7).
     for (int i = 4; i <= 7; ++i) {
         GetLevel(i, MyFirstFile, MyWorkFile, mild);
         GetLevel(i, MySecondFile, MyWorkFile, mild);
@@ -296,7 +291,7 @@ bool GatherAllQuestions(string& newFilePath, int& easy, int& mild, int& hard){
     }
 
     MyWorkFile << '\n';
-    MyWorkFile << "HARD:" << endl; // Start gathering the hard questions (lvl. 4 - 7).
+    MyWorkFile << "HARD" << endl; // Start gathering the hard questions (lvl. 4 - 7).
     for (int i = 8; i <= 10; ++i) {
         GetLevel(i, MyFirstFile, MyWorkFile, hard);
         GetLevel(i, MySecondFile, MyWorkFile, hard);
@@ -337,7 +332,7 @@ bool GatherAllQuestions(string& newFilePath, int& easy, int& mild, int& hard){
 * GatherQuestions() function reads all questions of a category and saves them in a file
  * with a path called newFilePath. Each question receives a next number in front of its ID.
 */
-bool GatherQuestions(const Category choice, string& newFilePath, int& easy, int& mild, int& hard) {
+bool GatherQuestions(const Category choice, string &newFilePath, int &easy, int &mild, int &hard) {
     string line;
     string srcFile;
 
@@ -379,21 +374,23 @@ bool GatherQuestions(const Category choice, string& newFilePath, int& easy, int&
     newFilePath = WORK_SRC;
     ofstream MyWorkFile(WORK_SRC);
 
-    MyWorkFile << "EASY:" << endl; // Start gathering the easy questions (lvl. 1 - 3).
+
+
+    MyWorkFile << "EASY" << endl; // Start gathering the easy questions (lvl. 1 - 3).
     getline(MyFile, line);  // 1.
-    for (int i = 1; i <= 3; ++i) {
+    for (int i = 1; i <= LAST_EASY; ++i) {
         GetLevel(i, MyFile, MyWorkFile, easy);
     }
 
     MyWorkFile << '\n';
-    MyWorkFile << "MILD:" << endl; // Start gathering the mild questions (lvl. 4 - 7).
-    for (int i = 4; i <= 7; ++i) {
+    MyWorkFile << "MILD" << endl; // Start gathering the mild questions (lvl. 4 - 7).
+    for (int i = 4; i <= LAST_MILD; ++i) {
         GetLevel(i, MyFile, MyWorkFile, mild);
     }
 
     MyWorkFile << '\n';
-    MyWorkFile << "HARD:" << endl; // Start gathering the hard questions (lvl. 4 - 7).
-    for (int i = 8; i <= 10; ++i) {
+    MyWorkFile << "HARD" << endl; // Start gathering the hard questions (lvl. 4 - 7).
+    for (int i = 8; i <= LAST_HARD; ++i) {
         GetLevel(i, MyFile, MyWorkFile, hard);
     }
     MyFile.close();
@@ -402,26 +399,26 @@ bool GatherQuestions(const Category choice, string& newFilePath, int& easy, int&
     return true;
 }
 
-bool IsElement(const int& elmnt, const int elemsArr[gameQuestions], const int questNum) {
+bool IsElement(const int elmnt, const int elemsArr[QUESTIONS_IN_GAME], const int questNum) {
     int begin = 0,
         end = 0;
 
-    if (questNum <= 5) {
+    if (questNum <= FIRST_STAGE) {
         begin = 0;
-        end = questNum;
+        end = questNum - 1;
     }
 
-    if (questNum >= 6 and questNum <= 10) {
-        begin = 5;
-        end = questNum;
+    if (questNum > FIRST_STAGE and questNum <= SECOND_STAGE) {
+        begin = FIRST_STAGE;
+        end = questNum - 1;
     }
 
-    if (questNum >= 11) {
-        begin = 10;
-        end = questNum;
+    if (questNum > SECOND_STAGE) {
+        begin = SECOND_STAGE;
+        end = LAST_STAGE;
     }
 
-    for (int i = 0; i <= questNum; ++i) {
+    for (int i = begin; i < end; ++i) {
         if (elmnt == elemsArr[i]) {
             return true;
         }
@@ -429,29 +426,195 @@ bool IsElement(const int& elmnt, const int elemsArr[gameQuestions], const int qu
     return false;
 }
 
-bool ReadQuestion(const string& srcFile, Question& temp, int& questNum, const string& complexity,
-                  const int questsAvailable, int (&asked)[gameQuestions]) {
+bool ReadQuestion(const string &srcFile, Question &temp, int questNum, const string &complexity,
+                  const int questsAvailable, int (&asked)[QUESTIONS_IN_GAME]) {
+
+    string line;
+
+
+    random_device rd;  //Will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    uniform_int_distribution<> distrib(1, questsAvailable);
+
+    int thisQuestion = distrib(gen);
+    while (IsElement(thisQuestion, asked, questNum)) {
+        thisQuestion = distrib(gen);
+    }
+    asked[questNum - 1] = thisQuestion;
+
     ifstream ReadFile;
     ReadFile.open(srcFile, ios::in);
     if (!ReadFile.is_open()) {
         return false;
     }
 
-    string line;
-
-    random_device dev;
-    (mt19937(dev()));
-    (std::uniform_int_distribution<int>(1, questsAvailable));
-
-    int nextQstn = dev();
-    while (!IsElement(nextQstn, asked, questNum)) {
-        (mt19937(dev()));
-        std::uniform_int_distribution<int>(1,questsAvailable);
-        nextQstn = dev();
+    getline(ReadFile, line);
+    while (!(line == complexity or ReadFile.eof())) {
+        getline(ReadFile, line);
     }
 
+    if (line == complexity) {
+        while (line != to_string(thisQuestion)) {
+            getline(ReadFile, line);
+        }
+    }
+
+    if (line == to_string(thisQuestion)) {
+        getline(ReadFile, line); // ID number
+        temp.questText = "";
+        getline(ReadFile, line);
+        while (!((line[0] == 'A' and line[1] == ')') or line[0] == '*')) {
+            temp.questText += line;
+            getline(ReadFile, line);
+        }
+        if (line[0] == '*') {
+            temp.answer = 'A';
+            temp.ansA = line.substr(1);
+        }
+        else {
+            temp.ansA = line;
+        }
+        getline(ReadFile, line);
+        if (line[0] == '*') {
+            temp.answer = 'B';
+            temp.ansB = line.substr(1);
+        }
+        else {
+            temp.ansB = line;
+        }
+        getline(ReadFile, line);
+        if (line[0] == '*') {
+            temp.answer = 'C';
+            temp.ansC = line.substr(1);
+        }
+        else {
+            temp.ansC = line;
+        }
+        getline(ReadFile, line);
+        if (line[0] == '*') {
+            temp.answer = 'D';
+            temp.ansD = line.substr(1);
+        }
+        else {
+            temp.ansD = line;
+        }
+        ReadFile.close();
+        return true;
+    }
+    return false;
 }
 
+void PrintQuestion(const int num, const Question& temp, const bool ansA,
+                   const bool ansB, const bool ansC, const bool ansD) {
+    Border();
+    cout << "Question " + to_string(num) << "\n";
+    cout << termcolor::color<CHARTEUSE>;
+    if (temp.questText.length() > LINE) {
+        cout << temp.questText.substr(0, LINE - 1) << endl;
+        cout << temp.questText.substr(LINE - 1, temp.questText.length() - 1) << "\n\n";
+    } else {
+        cout << temp.questText << "\n\n";
+    }
+    if ((temp.ansA.length() + temp.ansC.length() >= LINE) or (temp.ansB.length() + temp.ansD.length() >= LINE)) {
+        if (ansA) {
+            cout << temp.ansA << "\n";
+        }
+        if (ansB) {
+            cout << temp.ansA << "\n";
+        }
+        if (ansC) {
+            cout << temp.ansA << "\n";
+        }
+        if (ansD) {
+            cout << temp.ansA << "\n";
+        }
+    }
+    else {
+        if (ansA) {
+            cout << temp.ansA;
+        }
+        for (int i = 0; i < (LINE - temp.ansA.length() - temp.ansC.length()); ++i) {
+            cout << ' ';
+        }
+        if (ansC) {
+            cout << temp.ansC << "\n\n";
+        }
+        if (ansB) {
+            cout << temp.ansB;
+        }
+        for (int i = 0; i < (LINE - temp.ansB.length() - temp.ansD.length()); ++i) {
+            cout << ' ';
+        }
+        if (ansD) {
+            cout << temp.ansD << "\n\n";
+        }
+    }
+}
+
+/// жокери!!!
+
+
+bool TakeAnswer(const Question& temp, const int questNum, int &moneyGained) {
+    char ans;
+
+    Print(CENTER, "Answer : ", LINE);
+    cin >> ans;
+    if (ans == temp.answer or ans == temp.answer + LETTERCASE) {
+
+        if (questNum > STAGE1) {
+            if ((questNum > STAGE1 + 1 and questNum <= STAGE2) or (questNum > STAGE2 + 1 and questNum <= STAGE3)) {
+                moneyGained *= 2;
+            } else
+                switch (questNum) {
+                    case STAGE1 + 1:
+                        moneyGained = FORTH_PRIZE;
+                        break;
+                    case STAGE2 + 1:
+                        moneyGained = TWELFTH_PRIZE;
+                        break;
+                    case STAGE3 + 1:
+                        moneyGained = THE_GRAND_MILLION;
+                        break;
+                    default :
+                        break;
+                }
+
+        } else {
+            moneyGained += INITIAL_PRIZE;
+        }
+        cout << '\n';
+        Print(CENTER, "CONGRATULATIONS!\n", LINE);
+
+        if (questNum != LAST_STAGE) {
+            Print(CENTER, ("You reached a prize of " + to_string(moneyGained) + "$."), LINE);
+            cout << '\n';
+            Print(CENTER, "Press ENTER to continue...\n", LINE);
+            cin.ignore( std::numeric_limits<std::streamsize>::max(), '\n' );
+        }
+        else {
+            Print(CENTER, "YOU WON THE GRAND 1, 000, 000$.\n", LINE);
+        }
+        return true;
+    }
+
+    cout << termcolor::color<INDIAN_RED>;
+    Print(CENTER, "Sorry, the correct answer is ", LINE);
+    cout << setw(LINE / 2) << temp.answer << endl;
+    cout << termcolor::color<CHARTEUSE>;
+    if (questNum <= STAGE1 + 1) {
+        moneyGained = 0;
+    }
+    else {
+        if (questNum > STAGE1 + 1 and questNum <= STAGE2 + 1) {
+            moneyGained = FORTH_PRIZE;
+        }
+        else {
+            moneyGained = TWELFTH_PRIZE;
+        }
+    }
+    Print(CENTER, ("You won a prize of " + to_string(moneyGained) + "$."), LINE);
+    return false;
+}
 
 
 void StartGame() {
@@ -462,21 +625,49 @@ void StartGame() {
 
     Category choice;
     ChooseCategory(choice);
-    if (GatherQuestions(choice, newFile, easy, mild, hard)) {
-        cout << termcolor::color<TURQUOISE>;
-        /*Question currentQuestion;
-        int questNum = 1;
-        string askedQuestions[gameQuestions];
-        */
 
+    TitleBar();
+    if (GatherQuestions(choice, newFile, easy, mild, hard)) {
+        Question currentQuestion;
+        bool isCorrect = true;
+        int questNum;
+        int askedQuestions[QUESTIONS_IN_GAME];
+        int prize = 0;
+
+        for (questNum = 1; (questNum <= FIRST_STAGE and isCorrect); ++questNum) {
+            if (ReadQuestion(newFile, currentQuestion, questNum, "EASY", easy, askedQuestions)) {
+                PrintQuestion(questNum, currentQuestion, true,true,true,true);
+                if (!TakeAnswer(currentQuestion, questNum, prize)) {
+                    isCorrect = false;
+                }
+                // викаш жокерите
+                // продължаваш
+            }
+        }
+        for (questNum = 6; (questNum <= SECOND_STAGE and isCorrect); ++questNum) {
+            if (ReadQuestion(newFile, currentQuestion, questNum, "MILD", mild, askedQuestions)) {
+                PrintQuestion(questNum, currentQuestion, true,true,true,true);
+                if (!TakeAnswer(currentQuestion, questNum, prize)) {
+                    isCorrect = false;
+                }
+            }
+        }
+        for (questNum = 11; (questNum <= LAST_STAGE and isCorrect); ++questNum) {
+            if (ReadQuestion(newFile, currentQuestion, questNum, "HARD", hard, askedQuestions)) {
+                PrintQuestion(questNum, currentQuestion, true,true,true,true);
+                if (!TakeAnswer(currentQuestion, questNum, prize)) {
+                    isCorrect = false;
+                }
+            }
+        }
+        // Remove the file with the question that had to be deleted.
+        char workFile[newFile.length()];
+        strcpy(workFile, newFile.c_str());
+        if (remove(workFile) == 0) {
+            Redirect();
+        }
     }
 }
-
-
-
-
-
-
 
 
 /*
@@ -486,7 +677,7 @@ void AddQuestion() {
     int level;
     char topicSmbl;
     string question,
-            sourceFile;
+           sourceFile;
 
     TakeQuestionInfo(level, topicSmbl, question, sourceFile);
 
@@ -501,7 +692,7 @@ void AddQuestion() {
     }
     else {
         cout << termcolor::color<INDIAN_RED>;
-        Print (CENTER, "Sorry, the question could not be added!", LINE);
+        Print(CENTER, "Sorry, the question could not be added!", LINE);
         Redirect();
         return;
     }
@@ -511,7 +702,7 @@ void AddQuestion() {
  * Substitute() function gets the info for the question with a number idNum
  * that needs to be modified and adds it to the corresponding source file.
  */
-void Substitute(const string& idNum) {
+void Substitute(const string &idNum) {
     int level;
     char topic;
     string question,
