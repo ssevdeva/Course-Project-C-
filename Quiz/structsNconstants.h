@@ -13,8 +13,8 @@
 *
 */
 
-#ifndef QUIZ_STRUCTS_CONSTANTS_H
-#define QUIZ_STRUCTS_CONSTANTS_H
+#ifndef QUIZ_STRUCTSNCONSTANTS_H
+#define QUIZ_STRUCTSNCONSTANTS_H
 
 #define GEO_SRC "Resources/geography.txt"
 #define HIST_SRC "Resources/history.txt"
@@ -78,4 +78,4 @@ struct Question {
     char answer;
 };
 
-#endif //QUIZ_STRUCTS_CONSTANTS_H
+#endif //QUIZ_STRUCTSNCONSTANTS_H

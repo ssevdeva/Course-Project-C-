@@ -21,7 +21,7 @@
 #include <string>
 #include <random>
 
-#include "Structs_Constants.h"
+#include "structsNconstants.h"
 using namespace std;
 
 void Print(Position pos, const string &s, int linelength);

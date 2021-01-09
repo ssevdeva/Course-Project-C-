@@ -21,8 +21,8 @@
 #include <cstring>
 #include <fstream>
 
-#include "Structs_Constants.h"
-#include "TakeQuestionFunc.h"
+#include "structsNconstants.h"
+#include "takeQuestionFuncs.h"
 
 using namespace std;
 
@@ -31,5 +31,7 @@ bool AddContent(string& myPath, const string& myText, int level);
 bool RemoveQuestion(const string& pathName, const string& startPoint);
 
 bool SearchFile(const string& myText, const string& pathName);
+
+void Substitute(const string &idNum);
 
 #endif //QUIZ_CONTENTEDITORS_H

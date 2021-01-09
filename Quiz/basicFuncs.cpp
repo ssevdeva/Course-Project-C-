@@ -18,7 +18,7 @@
 #include <string>
 #include <random>
 
-#include "Structs_Constants.h"
+#include "structsNconstants.h"
 
 using namespace std;
 
@@ -66,18 +66,6 @@ void TitleBar() {
  * GetWholeAnswer() function reads from the console and saves the input with its whitespaces in str.
  */
 void GetWholeQuestion(string& str) {
-    /*string str1;
-    str = "";
-
-    cin >> str1;
-    str = str1;
-    while (str1[str1.length() - 1] != '?')
-    {
-        cin.ignore();
-        cin.clear();
-        cin >> str1;
-        str += (' ' + str1);
-    }*/
     char input[LINE];
     cin >> str;
     while(str[str.length() - 1] != '?') {
@@ -108,5 +96,7 @@ string GenerateID(const char& topic, const int lvl) {
     (mt19937(dev()));
     return ('#' + to_string(lvl) + topic + to_string(dev()));
 }
+
+
 
 

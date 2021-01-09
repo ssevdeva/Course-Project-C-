@@ -17,10 +17,27 @@
 #include "Resources/termcolor.hpp"
 #include <string>
 
-#include "Structs_Constants.h"
-#include "BasicFuncs.h"
+#include "structsNconstants.h"
+#include "basicFuncs.h"
 
 using namespace std;
+
+/*
+ * IsValidAnswer() function validates an answer letter input.
+ */
+void ValidAnswer(string &answer) {
+    cin >> answer;
+
+    // Handle invalid input.
+    while (!(answer == "A" or answer == "B" or answer == "C" or answer == "D")) {
+        cin.clear();
+        cin.ignore();
+        cout << termcolor::color<INDIAN_RED> << '\n';
+        Print(CENTER, "Invalid choice!\n", LINE);
+        Print(CENTER, "Please, enter valid selection: ", LINE);
+        cin >> answer;
+    }
+}
 
 /*
  * TakeQuestionInfo() function asks the user to enter a question and saves the input info.
@@ -123,17 +140,9 @@ void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sou
 
     // Choose the correct answer.
     cout << "Correct answer: ";
-    cin >> answer;
 
     // Handle invalid input.
-    while (!(answer == "A" or answer == "B" or answer == "C" or answer == "D")) {
-        cin.clear();
-        cin.ignore();
-        cout << termcolor::color<INDIAN_RED> << '\n';
-        Print(CENTER, "Invalid choice!\n", LINE);
-        Print(CENTER, "Please, enter valid selection: ", LINE);
-        cin >> answer;
-    }
+    ValidAnswer(answer);
 
     // Insert a '*' in front of the correct answer.
     switch (answer[0]) {

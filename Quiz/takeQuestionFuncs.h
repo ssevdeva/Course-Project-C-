@@ -17,13 +17,15 @@
 #include "Resources/termcolor.hpp"
 #include <string>
 
-#include "Structs_Constants.h"
-#include "BasicFuncs.h"
+#include "structsNconstants.h"
+#include "basicFuncs.h"
 
 using namespace std;
 
 #ifndef QUIZ_MYTAKEQUESTIONFUNC_H
 #define QUIZ_MYTAKEQUESTIONFUNC_H
+
+void ValidAnswer(string &answer);
 
 void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sourceFile);
 
