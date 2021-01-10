@@ -9,7 +9,7 @@
 * @idnumber 62517
 * @compiler GCC
 *
-* <INSERT DESCRIPTION HERE>
+* <header file with helper functions displaying menus in the console>
 *
 */
 

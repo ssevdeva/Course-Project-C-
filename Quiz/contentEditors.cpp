@@ -9,7 +9,7 @@
 * @idnumber 62517
 * @compiler GCC
 *
-* <file with helper functions>
+* <file with helper functions committing changes to the content of source text files>
 *
 */
 
@@ -19,7 +19,7 @@
 #include <fstream>
 
 #include "structsNconstants.h"
-#include "takeQuestionFuncs.h"
+#include "questionProcessing.h"
 
 using namespace std;
 

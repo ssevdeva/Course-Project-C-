@@ -9,7 +9,7 @@
 * @idnumber 62517
 * @compiler GCC
 *
-* <file with helper functions>
+* <file with basic helper functions>
 *
 */
 
