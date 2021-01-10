@@ -13,8 +13,8 @@
 *
 */
 
-#ifndef QUIZ_GAMETOOLS1_H
-#define QUIZ_GAMETOOLS1_H
+#ifndef QUIZ_GAMEUTILITIES1_H
+#define QUIZ_GAMEUTILITIES1_H
 
 #include <iostream>
 #include <string>
@@ -28,4 +28,4 @@ bool GatherAllQuestions(string &newFilePath, int &easy, int &mild, int &hard);
 
 bool GatherQuestions(Category choice, string &newFilePath, int &easy, int &mild, int &hard);
 
-#endif //QUIZ_GAMETOOLS1_H
+#endif //QUIZ_GAMEUTILITIES1_H
