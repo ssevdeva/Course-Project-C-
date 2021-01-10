@@ -9,7 +9,7 @@
 * @idnumber 62517
 * @compiler GCC
 *
-* <INSERT DESCRIPTION HERE>
+* <MAIN PROJECT FILE>
 *
 */
 
@@ -22,8 +22,10 @@
 #include "basicFuncs.h"
 #include "printMenus.h"
 #include "contentEditors.h"
+#include "questionProcessing.h"
 #include "gameTools1.h"
 #include "gameTools2.h"
+#include "lifelinesFuncs.h"
 
 using namespace std;
 
@@ -34,58 +36,10 @@ void MainMenu();   // The function is to be used afterwards.
  */
 void Redirect() {
     Print(CENTER, "Press ENTER to continue...\n", LINE);
-    cin.ignore( std::numeric_limits<std::streamsize>::max(), '\n' );
+    cin.ignore(LINE, '\n');
+    cin.get();
     MainMenu();  // return to the main menu
 }
-
-void PrintQuestion(const int num, const Question& temp, const bool ansA,
-                   const bool ansB, const bool ansC, const bool ansD) {
-    Border();
-    cout << "Question " + to_string(num) << "\n";
-    cout << termcolor::color<CHARTEUSE>;
-    if (temp.questText.length() > LINE) {
-        cout << temp.questText.substr(0, LINE - 1) << endl;
-        cout << temp.questText.substr(LINE - 1, temp.questText.length() - 1) << "\n\n";
-    } else {
-        cout << temp.questText << "\n\n";
-    }
-    if ((temp.ansA.length() + temp.ansC.length() >= LINE) or (temp.ansB.length() + temp.ansD.length() >= LINE)) {
-        if (ansA) {
-            cout << temp.ansA << "\n";
-        }
-        if (ansB) {
-            cout << temp.ansA << "\n";
-        }
-        if (ansC) {
-            cout << temp.ansA << "\n";
-        }
-        if (ansD) {
-            cout << temp.ansA << "\n";
-        }
-    }
-    else {
-        if (ansA) {
-            cout << temp.ansA;
-        }
-        for (int i = 0; i < (LINE - temp.ansA.length() - temp.ansC.length()); ++i) {
-            cout << ' ';
-        }
-        if (ansC) {
-            cout << temp.ansC << "\n\n";
-        }
-        if (ansB) {
-            cout << temp.ansB;
-        }
-        for (int i = 0; i < (LINE - temp.ansB.length() - temp.ansD.length()); ++i) {
-            cout << ' ';
-        }
-        if (ansD) {
-            cout << temp.ansD << "\n\n";
-        }
-    }
-}
-
-/// jokers!!!
 
 void StartGame() {
     string newFile;
@@ -97,9 +51,28 @@ void StartGame() {
     ChooseCategory(choice);
 
     TitleBar();
+
     if (GatherQuestions(choice, newFile, easy, mild, hard)) {
+
+        if (easy < FIRST_STAGE or mild < FIRST_STAGE or hard < FIRST_STAGE) {
+            cout << termcolor::color<INDIAN_RED> << '\n';
+            Print(CENTER, "Sorry, there are not enough questions to start a game!\n", LINE);
+            cout << termcolor::color<SPRING_GREEN>;
+
+            // Remove the file with the question that had to be deleted.
+            char workFile[newFile.length()];
+            strcpy(workFile, newFile.c_str());
+            if (remove(workFile) == 0) {
+                Redirect();
+                return;
+            }
+        }
+
         Question currentQuestion;
-        bool isCorrect = true;
+        bool isCorrect = true,
+             fiftyFifty = false,
+             askPublic = false,
+             friendCall = false;
         int questNum;
         int askedQuestions[QUESTIONS_IN_GAME];
         int prize = 0;
@@ -107,16 +80,18 @@ void StartGame() {
         for (questNum = 1; (questNum <= FIRST_STAGE and isCorrect); ++questNum) {
             if (ReadQuestion(newFile, currentQuestion, questNum, "EASY", easy, askedQuestions)) {
                 PrintQuestion(questNum, currentQuestion, true,true,true,true);
+                Lifelines(currentQuestion, questNum, fiftyFifty, askPublic, friendCall);
                 if (!TakeAnswer(currentQuestion, questNum, prize)) {
                     isCorrect = false;
                 }
-                // викаш жокерите
-                // продължаваш
+
+
             }
         }
         for (questNum = 6; (questNum <= SECOND_STAGE and isCorrect); ++questNum) {
             if (ReadQuestion(newFile, currentQuestion, questNum, "MILD", mild, askedQuestions)) {
                 PrintQuestion(questNum, currentQuestion, true,true,true,true);
+                Lifelines(currentQuestion, questNum, fiftyFifty, askPublic, friendCall);
                 if (!TakeAnswer(currentQuestion, questNum, prize)) {
                     isCorrect = false;
                 }
@@ -125,6 +100,7 @@ void StartGame() {
         for (questNum = 11; (questNum <= LAST_STAGE and isCorrect); ++questNum) {
             if (ReadQuestion(newFile, currentQuestion, questNum, "HARD", hard, askedQuestions)) {
                 PrintQuestion(questNum, currentQuestion, true,true,true,true);
+                Lifelines(currentQuestion, questNum, fiftyFifty, askPublic, friendCall);
                 if (!TakeAnswer(currentQuestion, questNum, prize)) {
                     isCorrect = false;
                 }
@@ -135,6 +111,7 @@ void StartGame() {
         strcpy(workFile, newFile.c_str());
         if (remove(workFile) == 0) {
             Redirect();
+            return;
         }
     }
 }
