@@ -9,7 +9,7 @@
 * @idnumber 62517
 * @compiler GCC
 *
-* <INSERT DESCRIPTION HERE>
+* <header file with helper functions necessary for the implementation of the "New Game" functionality>
 *
 */
 

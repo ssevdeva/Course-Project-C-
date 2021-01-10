@@ -9,7 +9,7 @@
 * @idnumber 62517
 * @compiler GCC
 *
-* <INSERT DESCRIPTION HERE>
+* <file with helper functions necessary for the implementation of the "New Game" functionality>
 *
 */
 
@@ -21,7 +21,7 @@
 
 /*
  * GetLevel() function reads all questions of a single level from ReadFile copies
- * them in WriteFile. Each question receives a next number in front of its ID.
+ * them in WriteFile. Each question receives an index number in front of its ID.
  */
 void GetLevel(int lvl, ifstream &ReadFile, ofstream &WriteFile, int &numOfQuest) {
     string line;
@@ -48,7 +48,7 @@ void GetLevel(int lvl, ifstream &ReadFile, ofstream &WriteFile, int &numOfQuest)
 
 /*
  * GatherAllQuestions() function reads all questions of all categories and saves them in a file
- * with a path called newFilePath. Each question receives a next number in front of its ID.
+ * with a path called newFilePath. Each question receives an index number in front of its ID.
 */
 bool GatherAllQuestions(string &newFilePath, int &easy, int &mild, int &hard) {
     string line;

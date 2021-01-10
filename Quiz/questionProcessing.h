@@ -9,7 +9,7 @@
 * @idnumber 62517
 * @compiler GCC
 *
-* <file with helper functions>
+* <header file with helper functions reading, saving and printing the information for a new question>
 *
 */
 
@@ -28,5 +28,8 @@ using namespace std;
 void ValidAnswer(string &answer);
 
 void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sourceFile);
+
+void PrintQuestion(int num, const Question& temp, bool ansA,
+                   bool ansB, bool ansC, bool ansD);
 
 #endif //QUIZ_MYTAKEQUESTIONFUNC_H
