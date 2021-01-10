@@ -23,8 +23,8 @@
 #include "printMenus.h"
 #include "contentEditors.h"
 #include "questionProcessing.h"
-#include "gameTools1.h"
-#include "gameTools2.h"
+#include "gameUtilities1.h"
+#include "gameUtilities2.h"
 #include "lifelinesFuncs.h"
 
 using namespace std;
@@ -41,25 +41,31 @@ void Redirect() {
     MainMenu();  // return to the main menu
 }
 
+/*
+ * StartGame() function carries out the quiz game.
+ */
 void StartGame() {
     string newFile;
     int easy = 0, // will store the number of easy questions (lvl. 1 - 3)
         mild = 0, // will store the number of mild questions (lvl. 4 - 7)
         hard = 0; // will store the number of difficult questions (lvl. 8 - 10)
 
+    // Choose questions category.
     Category choice;
     ChooseCategory(choice);
 
     TitleBar();
 
+    // Collect all questions of the chosen category in a single work file.
     if (GatherQuestions(choice, newFile, easy, mild, hard)) {
 
+        // Check if number of questions is enough for the game to take place.
         if (easy < FIRST_STAGE or mild < FIRST_STAGE or hard < FIRST_STAGE) {
             cout << termcolor::color<INDIAN_RED> << '\n';
             Print(CENTER, "Sorry, there are not enough questions to start a game!\n", LINE);
             cout << termcolor::color<SPRING_GREEN>;
 
-            // Remove the file with the question that had to be deleted.
+            // Remove the temporary work file.
             char workFile[newFile.length()];
             strcpy(workFile, newFile.c_str());
             if (remove(workFile) == 0) {
@@ -74,9 +80,10 @@ void StartGame() {
              askPublic = false,
              friendCall = false;
         int questNum;
-        int askedQuestions[QUESTIONS_IN_GAME];
+        int askedQuestions[QUESTIONS_IN_GAME];      // Questions will be stored here after their first occurrence.
         int prize = 0;
 
+        // Begin first stage of the game.
         for (questNum = 1; (questNum <= FIRST_STAGE and isCorrect); ++questNum) {
             if (ReadQuestion(newFile, currentQuestion, questNum, "EASY", easy, askedQuestions)) {
                 PrintQuestion(questNum, currentQuestion, true,true,true,true);
@@ -84,10 +91,9 @@ void StartGame() {
                 if (!TakeAnswer(currentQuestion, questNum, prize)) {
                     isCorrect = false;
                 }
-
-
             }
         }
+        // Begin second stage of the game.
         for (questNum = 6; (questNum <= SECOND_STAGE and isCorrect); ++questNum) {
             if (ReadQuestion(newFile, currentQuestion, questNum, "MILD", mild, askedQuestions)) {
                 PrintQuestion(questNum, currentQuestion, true,true,true,true);
@@ -97,6 +103,7 @@ void StartGame() {
                 }
             }
         }
+        // Begin last stage of the game.
         for (questNum = 11; (questNum <= LAST_STAGE and isCorrect); ++questNum) {
             if (ReadQuestion(newFile, currentQuestion, questNum, "HARD", hard, askedQuestions)) {
                 PrintQuestion(questNum, currentQuestion, true,true,true,true);
@@ -106,7 +113,7 @@ void StartGame() {
                 }
             }
         }
-        // Remove the file with the question that had to be deleted.
+        // Remove the temporary work file.
         char workFile[newFile.length()];
         strcpy(workFile, newFile.c_str());
         if (remove(workFile) == 0) {
@@ -115,7 +122,6 @@ void StartGame() {
         }
     }
 }
-
 
 /*
  * AddQuestion() adds a new question in a category.
