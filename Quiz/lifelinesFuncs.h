@@ -24,11 +24,11 @@
 #include "basicFuncs.h"
 #include "printMenus.h"
 #include "questionProcessing.h"
-#include "gameTools2.h"
+#include "gameUtilities2.h"
 
 void FiftyFifty(const Question& thisQuestion, int questNum);
 
-void AskPublic(const Question& thisQuestion, int questNum);
+void AskPublic(const Question& thisQuestion, int questIndex);
 
 void FriendCall();
 

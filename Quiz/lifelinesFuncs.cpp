@@ -21,7 +21,17 @@
 #include "basicFuncs.h"
 #include "printMenus.h"
 #include "questionProcessing.h"
-#include "gameTools2.h"
+#include "gameUtilities2.h"
+
+/*
+ * GenerateRandom() function generates a random number within a given interval.
+ */
+int GenerateRandom(const int upper, const int lower) {
+    random_device rd;  //Will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    uniform_int_distribution<> distrib(lower, upper);
+    return distrib(gen);
+}
 
 /*
  * FiftyFifty() function simulates the "50:50" lifeline.
@@ -46,8 +56,8 @@ void FiftyFifty(const Question& thisQuestion, const int questNum) {
             false, 4, 'D'
     };
 
-    unsigned int correctAns = 0,
-                 wrongAns = 0;
+    unsigned int correctAns,
+                 wrongAns;
 
     if (thisQuestion.answer == ansA.letter) {    // Check if this is the correct answer.
         ansA.display = true;
@@ -70,14 +80,10 @@ void FiftyFifty(const Question& thisQuestion, const int questNum) {
         }
     }
 
-    random_device rd;  //Will be used to obtain a seed for the random number engine
-    mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    uniform_int_distribution<> distrib(ansA.num, ansD.num);
-
     // Generate new random numbers until the generated is not the correct answer.
-    wrongAns = distrib(gen);
+    wrongAns = GenerateRandom(ansA.num, ansD.num);
     while (wrongAns == correctAns) {
-        wrongAns = distrib(gen);
+        wrongAns = GenerateRandom(ansA.num, ansD.num);
     }
 
     if (wrongAns == ansA.num) {           // Check if this is the wrong answer to be displayed.
@@ -100,8 +106,227 @@ void FiftyFifty(const Question& thisQuestion, const int questNum) {
     PrintQuestion(questNum, thisQuestion, ansA.display, ansB.display, ansC.display, ansD.display);
 }
 
-void AskPublic(const Question& thisQuestion, const int questNum) {
+/*
+ * FindCeil() is a utility function to find ceiling of r in arr[l..h].
+ */
+int FindCeil(int *arr, int r, int l, int h)
+{
+    int mid;
+    while (l < h)
+    {
+        mid = l + ((h - l) >> 1); // Same as mid = (l+h)/2
+        (r > arr[mid]) ? (l = mid + 1) : (h = mid);
+    }
+    return (arr[l] >= r) ? l : -1;
+}
 
+/*
+ * MyRand() is a function that returns a random number from arr[]
+ * according to distribution array defined by freq[].
+ */
+int MyRand(const int (&arr)[4], int *freq, int size) {
+    // Create and fill prefix array
+    int prefix[size],
+        i;
+    prefix[0] = freq[0];
+    for (i = 1; i < size; ++i)
+        // Prefix[n-1] is sum of all frequencies.
+        prefix[i] = prefix[i - 1] + freq[i];
+
+    // Generate a random number with value from 1 to this sum
+    int r = (rand() % prefix[size - 1]) + 1;
+
+    // Find index of ceiling of r in prefix array
+    int indexC = FindCeil(prefix, r, 0, size - 1);
+    return arr[indexC];
+}
+
+/*
+ * GenerateQuestionNumber() function randomly generates
+ * a question index according to a fixed truth probability.
+ */
+int GenerateQuestionNumber(const int questIndex, const int (&arr)[4]) {
+    const int easyProbability = 70,   // 70% chance of the correct answer to be with the highest vote perc.
+              mildProbability = 40,   // 40% chance of the correct answer to be with the highest vote perc.
+              hardProbability = 20;   // 20% chance of the correct answer to be with the highest vote perc.
+
+    int correctP,
+        wrongP;
+
+    // Define truth probability of first-stage answers.
+    if (questIndex <= FIRST_STAGE){
+        correctP  = easyProbability / 10,
+        wrongP = (100 - easyProbability) / (3 * 10);
+    }
+    else {
+        // Define truth probability of second-stage answers.
+        if (questIndex > FIRST_STAGE and questIndex <= SECOND_STAGE) {
+            correctP = mildProbability / 10,
+            wrongP = (100 - mildProbability) / (3 * 10);
+        }
+        else {
+            // Define truth probability of last-stage answers.
+            if (questIndex > SECOND_STAGE){
+                correctP  = hardProbability / 10,
+                wrongP = (100 - hardProbability) / (3 * 10);
+            }
+        }
+    }
+    int freq[4] = {correctP, wrongP, wrongP, wrongP};
+    return MyRand(arr, freq, 4);                      // call random index generator
+}
+
+/*
+ * Initialise() function gives values to a four-element integer array.
+ */
+void Initialise(int (&arr)[4], const int val1, const int val2, const int val3, const int val4) {
+    arr[0] = val1;
+    arr[1] = val2;
+    arr[2] = val3;
+    arr[3] = val4;
+}
+
+/*
+ * IdIncluded() function checks if an element exists in a four-element integer array.
+ */
+bool IsIncluded(const int (&arr)[4], const int limit, const int elem) {
+    for (int i = 0; i < limit; ++i) {
+        if (arr[i] == elem) {
+            return true;
+        }
+    }
+    return false;
+}
+
+struct OneVote {
+    string letter;
+    int percentage;
+};
+
+/*
+ * ModifiedBubbleSort() function sorts an array of letters in alphabetical row.
+ */
+void ModifiedBubbleSort (const int size, OneVote arr[]) {
+    for (int i = 0; i < size - 1; ++i) {
+        for (int j = 0; j < size - i - 1; ++j) {
+            if (arr[j + 1].letter[0] < arr[j].letter[0]) {
+                // Swap values.
+                string temp = arr[j + 1].letter;
+                arr[j + 1].letter = arr[j].letter;
+                arr[j].letter = temp;
+            }
+        }
+    }
+}
+
+/*
+ * AskPublic() function simulates the "Ask the Audience" lifeline.
+ * Displays the public's vote for the correct answer with a given truth probability.
+ */
+void AskPublic(const Question& thisQuestion, const int questIndex) {
+    const int numOfquest = 4;
+
+    OneVote audience[numOfquest];
+
+    int min = 1,
+        max = 100,
+        prevGenerated[numOfquest],             // To store the indexes of previously generated questions.
+        questsRow[numOfquest] = {1, 2, 3, 4};  // To store each permutation of question indexes.
+
+    struct MyAnswer {
+        unsigned int num;
+        char letter;
+    };
+
+    MyAnswer ansA {
+            1, 'A'
+    };
+    MyAnswer ansB {
+            2, 'B'
+    };
+    MyAnswer ansC {
+            3, 'C'
+    };
+    MyAnswer ansD {
+            4, 'D'
+    };
+
+    // Define which is the correct answer.
+    if (thisQuestion.answer == ansA.letter) {
+        Initialise(questsRow, ansA.num, ansB.num, ansC.num, ansD.num);
+    }
+    else {
+        if (thisQuestion.answer == ansB.letter) {
+            Initialise(questsRow, ansB.num, ansA.num, ansC.num, ansD.num);
+        }
+        else {
+            if (thisQuestion.answer == ansC.letter) {
+                Initialise(questsRow, ansC.num, ansA.num, ansB.num, ansD.num);
+            }
+            else {
+                Initialise(questsRow, ansD.num, ansA.num, ansB.num, ansC.num);
+            }
+        }
+    }
+
+    // Initial generation of a random index.
+    int randIndex = GenerateQuestionNumber(questIndex, questsRow);
+    // Save it.
+    prevGenerated[0] = randIndex;
+
+    // Take public's vote percentage for this answer.
+    switch (randIndex) {
+        case 1:
+            audience[0].letter = "A";
+            break;
+        case 2:
+            audience[0].letter = "B";
+            break;
+        case 3:
+            audience[0].letter = "C";
+            break;
+        case 4:
+            audience[0].letter = "D";
+            break;
+    }
+    audience[0].percentage = GenerateRandom(max, min);
+
+    // Repeat the same for the rest three questions.
+    for (int i = 1; i < numOfquest; ++i) {
+        while (IsIncluded(prevGenerated, i, randIndex)) {
+            randIndex = GenerateQuestionNumber(questIndex, questsRow);
+        }
+        prevGenerated[i] = randIndex;
+        switch (randIndex) {
+            case 1:
+                audience[i].letter = "A";
+                break;
+            case 2:
+                audience[i].letter = "B";
+                break;
+            case 3:
+                audience[i].letter = "C";
+                break;
+            case 4:
+                audience[i].letter = "D";
+                break;
+        }
+        max -= audience[i - 1].percentage;
+        audience[i].percentage = GenerateRandom(max, min);
+    }
+
+    // Calculate last vote's percentage in order to have percentage sum of 100%.
+    audience[numOfquest - 1].percentage = 100 - audience[0].percentage - audience[1].percentage - audience[2].percentage;
+    ModifiedBubbleSort(numOfquest, audience);
+
+    // Display public's vote.
+    cout << termcolor::color<SPRING_GREEN>;
+    Print(CENTER, audience[0].letter + " - " + to_string(audience[0].percentage) + "%\n", LINE);
+    Print(CENTER, audience[1].letter + " - " + to_string(audience[1].percentage) + "%\n", LINE);
+    Print(CENTER, audience[2].letter + " - " + to_string(audience[2].percentage) + "%\n", LINE);
+    Print(CENTER, audience[3].letter + " - " + to_string(audience[3].percentage) + "%\n", LINE);
+    cout << termcolor::reset;
+    cout << '\n';
 }
 
 /*
@@ -126,11 +351,7 @@ void FriendCall() {
             4, "D"
     };
 
-    random_device rd;  //Will be used to obtain a seed for the random number engine
-    mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    uniform_int_distribution<> distrib(ansA.num, ansD.num);
-
-    unsigned int randomNum = distrib(gen);
+    unsigned int randomNum = GenerateRandom(ansA.num, ansD.num);
 
     // Initialisation of guessing.
     MyAnswer guess {
@@ -153,7 +374,7 @@ void FriendCall() {
     // Display friend's opinion.
 
     cout << termcolor::color<SPRING_GREEN>;
-    Print(CENTER, "I suppose the correct answer is ", LINE);
+    Print(CENTER, "Hi, I suppose the correct answer is ", LINE);
     cout << termcolor::color<CHARTEUSE> << guess.letter << termcolor::color<SPRING_GREEN> << ".\n";
     cout << termcolor::reset;
     cout << '\n';
@@ -215,7 +436,6 @@ void Lifelines(const Question& temp, const int questNum, bool& fiftyFifty, bool&
 
     // Handle invalid input.
     while (!(choice == "1" or choice == "2" or choice == "3")) {
-
         cout << '\n' << termcolor::color<INDIAN_RED>;
         Print(CENTER, "Invalid choice of lifeline!\n", LINE);
         Print(CENTER, "Please, enter an available number of a lifeline: ", LINE);
@@ -229,11 +449,11 @@ void Lifelines(const Question& temp, const int questNum, bool& fiftyFifty, bool&
         FiftyFifty(temp, questNum);           // Use lifeline.
         return;
     }
-    /*if (choice == "2") {                      // Check if this is the lifeline of choice.
-        askPublic = true;                       // Set lifeline to already used.
-        AskPublic(temp, questNum); b            // Use lifeline.
+    if (choice == "2") {                      // Check if this is the lifeline of choice.
+        askPublic = true;                     // Set lifeline to already used.
+        AskPublic(temp, questNum);            // Use lifeline.
         return;
-    } */
+    }
     if (choice == "3") {                      // Check if this is the lifeline of choice.
         friendCall = true;                    // Set lifeline to already used.
         FriendCall();                         // Use lifeline.
