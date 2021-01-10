@@ -14,7 +14,6 @@
 */
 
 #include <iostream>
-#include "Resources/termcolor.hpp"
 #include <string>
 #include <random>
 
@@ -48,7 +47,7 @@ void Print(const Position pos, const string &s, const int linelength) {
  */
 void Border() {
     string header(LINE, '=');
-    cout << termcolor::color<SPRING_GREEN> << header << '\n';
+    cout << header << '\n';
 }
 
 /*
@@ -57,7 +56,7 @@ void Border() {
 void TitleBar() {
     string s = " WHO WANTS TO BE A MILLIONAIRE ";
     string header(LINE / 2 - s.length() / 2 - 1, '=');
-    cout << termcolor::color<SPRING_GREEN> << header;
+    cout << header;
     cout << s;
     cout << header << '\n';
 }

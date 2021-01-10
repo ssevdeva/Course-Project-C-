@@ -14,7 +14,6 @@
 */
 
 #include <iostream>
-#include "Resources/termcolor.hpp"
 #include <string>
 #include <iomanip>
 
@@ -147,7 +146,6 @@ bool ReadQuestion(const string &srcFile, Question &temp, int questNum, const str
 bool TakeAnswer(const Question& temp, const int questNum, int &moneyGained) {
     string ans;
 
-    cout << termcolor::color<CHARTEUSE>;
     Print(CENTER, "Your answer is: ", LINE);
 
     // Handle invalid input.
@@ -183,9 +181,7 @@ bool TakeAnswer(const Question& temp, const int questNum, int &moneyGained) {
         if (questNum != LAST_STAGE) {
             Print(CENTER, ("You reached a prize of " + to_string(moneyGained) + "$.\n"), LINE);
             cout << '\n';
-            cout << termcolor::color<SPRING_GREEN>;
             Print(CENTER, "Press ENTER to continue...\n", LINE);
-            cout << termcolor::color<CHARTEUSE>;
             cin.ignore(LINE, '\n');
             cin.get();
         }
@@ -197,10 +193,10 @@ bool TakeAnswer(const Question& temp, const int questNum, int &moneyGained) {
     }
 
     // Display a message, if the given answer is incorrect.
-    cout << termcolor::color<INDIAN_RED> << '\n';
+    cout << '\n';
     Print(CENTER, "Sorry, the correct answer is ", LINE);
     cout << temp.answer << '.' << '\n';
-    cout << termcolor::color<CHARTEUSE> << '\n';
+    cout << '\n';
 
     // Calculate the final sum of money.
     if (questNum <= STAGE1 + 1) {
@@ -216,6 +212,5 @@ bool TakeAnswer(const Question& temp, const int questNum, int &moneyGained) {
     }
     // Display a message at the end of the game.
     Print(CENTER, ("You won a prize of " + to_string(moneyGained) + "$.\n"), LINE);
-    cout << termcolor::color<SPRING_GREEN>;
     return false;
 }

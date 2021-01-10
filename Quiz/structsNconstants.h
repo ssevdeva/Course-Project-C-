@@ -23,11 +23,6 @@
 #define POL_SRC "Resources/politics.txt"
 #define WORK_SRC "Resources/workFile.txt"
 
-// Colour codes.
-const int INDIAN_RED = 203,
-          SPRING_GREEN = 121,
-          CHARTEUSE = 118;
-
 const unsigned int LETTERCASE = 'a' - 'A';
 
 // Length of game field.

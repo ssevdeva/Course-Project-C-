@@ -17,7 +17,6 @@
 #define QUIZ_BASICFUNCS_H
 
 #include <iostream>
-#include "Resources/termcolor.hpp"
 #include <string>
 #include <random>
 

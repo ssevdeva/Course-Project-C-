@@ -14,7 +14,6 @@
 */
 
 #include <iostream>
-#include "Resources/termcolor.hpp"
 
 #include "structsNconstants.h"
 #include "basicFuncs.h"

@@ -14,7 +14,6 @@
 */
 
 #include <iostream>
-#include "Resources/termcolor.hpp"
 
 #include "structsNconstants.h"
 #include "basicFuncs.h"
@@ -25,7 +24,6 @@
 void MainMenuPrint() {
     TitleBar();
     cout << '\n';
-    cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "N - New Game\n", LINE);
     Print(CENTER, "A - Add Question\n", LINE);
     Print(CENTER, "M - Modify Question\n", LINE);
@@ -44,13 +42,11 @@ void MainMenuOption(Option &choice) {
         if (valid < 0) {
             Border();
             MainMenuPrint();
-            cout << termcolor::color<INDIAN_RED>;
             Print(CENTER, "Invalid choice!\n", LINE);
             Print(CENTER, "Please, enter valid selection: ", LINE);
         }
         else {
             // Ask the user to choose a category.
-            cout << termcolor::color<SPRING_GREEN>;
             Print(CENTER, "Enter selection: ", LINE);
         }
         cin >> opt;
@@ -97,7 +93,6 @@ void MainMenuOption(Option &choice) {
 void CategoriesPrint() {
     TitleBar();
     cout << '\n';
-    cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "1. Geography\n", LINE);
     Print(CENTER, "2. History\n", LINE);
     Print(CENTER, "3. Literature\n", LINE);
@@ -119,13 +114,11 @@ void CategoriesOption(Category &topic) {
         if (valid < 0) {
             Border();
             CategoriesPrint();
-            cout << termcolor::color<INDIAN_RED>;
             Print(CENTER, "Invalid choice!\n", LINE);
             Print(CENTER, "Please, enter valid selection: ", LINE);
         }
         else {
             // Ask the user to choose a category.
-            cout << termcolor::color<SPRING_GREEN>;
             Print(CENTER, "Enter selection: ", LINE);
         }
         // Define which is the chosen category.

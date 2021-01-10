@@ -185,12 +185,10 @@ void Substitute(const string &idNum) {
 
     // Add the modified question to the source file for its category.
     if (AddContent((string &) pathName, myText, level)) {
-        cout << termcolor::color<SPRING_GREEN>;
         Print(CENTER, "The question has been successfully modified!\n", LINE);
         return;
     }
 
     // Display a message, if the process has failed.
-    cout << termcolor::color<INDIAN_RED>;
     Print(CENTER, "Sorry, the question could not be modified!\n", LINE);
 }

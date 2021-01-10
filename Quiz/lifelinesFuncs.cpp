@@ -14,7 +14,6 @@
 */
 
 #include <iostream>
-#include "Resources/termcolor.hpp"
 #include <string>
 
 #include "structsNconstants.h"
@@ -320,12 +319,10 @@ void AskPublic(const Question& thisQuestion, const int questIndex) {
     ModifiedBubbleSort(numOfquest, audience);
 
     // Display public's vote.
-    cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, audience[0].letter + " - " + to_string(audience[0].percentage) + "%\n", LINE);
     Print(CENTER, audience[1].letter + " - " + to_string(audience[1].percentage) + "%\n", LINE);
     Print(CENTER, audience[2].letter + " - " + to_string(audience[2].percentage) + "%\n", LINE);
     Print(CENTER, audience[3].letter + " - " + to_string(audience[3].percentage) + "%\n", LINE);
-    cout << termcolor::reset;
     cout << '\n';
 }
 
@@ -372,11 +369,8 @@ void FriendCall() {
         }
     }
     // Display friend's opinion.
-
-    cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "Hi, I suppose the correct answer is ", LINE);
-    cout << termcolor::color<CHARTEUSE> << guess.letter << termcolor::color<SPRING_GREEN> << ".\n";
-    cout << termcolor::reset;
+    cout << guess.letter << ".\n";
     cout << '\n';
 }
 
@@ -395,7 +389,6 @@ void Lifelines(const Question& temp, const int questNum, bool& fiftyFifty, bool&
     }
 
     // Display a message to the user.
-    cout << termcolor::white;
     Print(CENTER, "Would you like to use any lifelines?\n", LINE);
     Print(CENTER, "Y - Yes/No - N: ", LINE);
 
@@ -412,7 +405,6 @@ void Lifelines(const Question& temp, const int questNum, bool& fiftyFifty, bool&
 
     cout << '\n';
     if (yes_no == "N" or yes_no == "n") {
-        cout << termcolor::reset;
         return;
     }
     if (!fiftyFifty) {                                 // Check if the lifeline is available.
@@ -436,11 +428,10 @@ void Lifelines(const Question& temp, const int questNum, bool& fiftyFifty, bool&
 
     // Handle invalid input.
     while (!(choice == "1" or choice == "2" or choice == "3")) {
-        cout << '\n' << termcolor::color<INDIAN_RED>;
+        cout << '\n';
         Print(CENTER, "Invalid choice of lifeline!\n", LINE);
         Print(CENTER, "Please, enter an available number of a lifeline: ", LINE);
         cin >> choice;
-        cout << termcolor::white;
     }
 
     cout << '\n';

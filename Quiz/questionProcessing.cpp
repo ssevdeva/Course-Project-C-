@@ -14,7 +14,6 @@
 */
 
 #include <iostream>
-#include "Resources/termcolor.hpp"
 #include <string>
 
 #include "structsNconstants.h"
@@ -33,7 +32,7 @@ void ValidAnswer(string &answer) {
              answer == "C" or answer == "c" or answer == "D" or answer == "d")) {
         cin.clear();
         cin.ignore();
-        cout << termcolor::color<INDIAN_RED> << '\n';
+        cout << '\n';
         Print(CENTER, "Invalid choice!\n", LINE);
         Print(CENTER, "Please, enter valid selection: ", LINE);
         cin >> answer;
@@ -52,7 +51,6 @@ void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sou
             ansD;
 
     // Choose a question category.
-    cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "Choose a category for the question", LINE);
     cout << "\n\n";
     Print(CENTER, "1. Geography  2. History  3. Literature  4. Physics  5. Politics  \n\n", LINE);
@@ -64,7 +62,7 @@ void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sou
     while (topic < 1 or topic > 5 or cin.fail()) {
         cin.clear();
         cin.ignore();
-        cout << termcolor::color<INDIAN_RED> << '\n';
+        cout << '\n';
         Print(CENTER, "Invalid choice!\n", LINE);
         Print(CENTER, "Please, enter valid selection: ", LINE);
         cin >> topic;
@@ -103,7 +101,6 @@ void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sou
     }
 
     // Choose a question category.
-    cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "Choose a level of difficulty (1 - 10): ", LINE);
     cin >> level;
 
@@ -111,7 +108,7 @@ void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sou
     while (level < 1 or level > 10 or cin.fail()) {
         cin.clear();
         cin.ignore();
-        cout << termcolor::color<INDIAN_RED> << '\n';
+        cout << '\n';
         Print(CENTER, "Invalid choice!\n", LINE);
         Print(CENTER, "Please, enter valid selection: ", LINE);
         cin >> level;
@@ -119,12 +116,10 @@ void TakeQuestionInfo(int& level, char& topicSmbl, string& question, string& sou
     cout << '\n';
 
     // Enter a new question.
-    cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "Please, enter your question: \n", LINE);
     GetWholeQuestion(question);
 
     // Enter optional answers for the question.
-    cout << termcolor::color<SPRING_GREEN>;
     Print(CENTER, "Please, enter the answers: \n", LINE);
     cout << "A) ";
     GetWholeAnswer(ansA);
@@ -180,7 +175,6 @@ void PrintQuestion(const int num, const Question& temp, const bool ansA,
     Border();
     // display question number
     cout << "Question " + to_string(num) << "\n";
-    cout << termcolor::color<CHARTEUSE>;
 
     // display the question
     if (temp.questText.length() > LINE) {                               // multiple lines

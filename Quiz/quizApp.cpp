@@ -14,7 +14,6 @@
 */
 
 #include <iostream>
-#include "Resources/termcolor.hpp"
 #include <string>
 #include <cstdlib>
 
@@ -61,9 +60,8 @@ void StartGame() {
 
         // Check if number of questions is enough for the game to take place.
         if (easy < FIRST_STAGE or mild < FIRST_STAGE or hard < FIRST_STAGE) {
-            cout << termcolor::color<INDIAN_RED> << '\n';
+            cout << '\n';
             Print(CENTER, "Sorry, there are not enough questions to start a game!\n", LINE);
-            cout << termcolor::color<SPRING_GREEN>;
 
             // Remove the temporary work file.
             char workFile[newFile.length()];
@@ -139,12 +137,11 @@ void AddQuestion() {
 
     // Add all the info for the new question to the corresponding sourceFile if possible.
     if (AddContent(sourceFile, addText, level)) {
-        cout << termcolor::color<SPRING_GREEN> << '\n';
+        cout << '\n';
         Print(CENTER, "The question has been successfully added!\n", LINE);
         Redirect();
     }
     else {
-        cout << termcolor::color<INDIAN_RED>;
         Print(CENTER, "Sorry, the question could not be added!", LINE);
         Redirect();
         return;
@@ -160,7 +157,6 @@ void ModifyQuestion() {
 
     while (!doExist) {
         // Choose a question ID number.
-        cout << termcolor::color<SPRING_GREEN>;
         Print(CENTER, "Please, enter the ID number of the question: ", LINE);
         cin >> idNum;
         cout << "\n";
@@ -193,9 +189,7 @@ void ModifyQuestion() {
         }
 
         // Display a message if the question does not exist.
-        cout << termcolor::color<INDIAN_RED>;
         Print(CENTER, "The question does not exist!", LINE);
-        cout << termcolor::color<SPRING_GREEN>;
     }
     Redirect();
 }
@@ -204,7 +198,6 @@ void ModifyQuestion() {
  * ExitFunc() function displays a final message and terminates the game.
  */
 void ExitFunc() {
-    cout << termcolor::white;
     Print(CENTER, "Thank you for playing! :)", LINE);
     cout << '\n';
     exit(EXIT_SUCCESS);
