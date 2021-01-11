@@ -17,6 +17,7 @@ Game Instructions:
    * After choosing a category, if the number of questions is not enough to be used during the game, a warning message is displayed on the screen.
    
    * If the game has successfully started, a temporary text file is created to store the questions that might be included in the game.
+   
    * The user is given 15 questions.
        > Questions 1 - 5: easy.
        > Questions 6 - 10: normal difficulty.
@@ -24,8 +25,9 @@ Game Instructions:
    
    * For each question, the player is asked if they would like to use any lifelines (if they are still available) before entering their answer.
        > Type 'Y'/'y' for Yes and 'N'/'n' for No.
-       > Available lifelines: "50:50", "Ask the Audience", "Phone a friend".
-       > "50:50" eliminates two wrong answers.
+       
+   * Available lifelines: "50:50", "Ask the Audience", "Phone a friend".
+       > "50:50" eliminates two wrong answers. 
        > "Ask the Audience" displays the votes of a simulated audience in support of each answer.
        > "Phone a Friend" simulates a call to a friend who gives their opinion in support of one of the answers.
   
@@ -37,19 +39,19 @@ Game Instructions:
        > Question 13 - 14: each doubles the prize reached.
        > Question 15: reached prize gets 1 000 000$.
        
-* If a wrong answer is given, the game ends and the player takes their prize according to reached stage of the game.
+  * If a wrong answer is given, the game ends and the player takes their prize according to reached stage of the game.
        > Wrong answered questions 1 - 4: 0$.
        > Wrong answered questions 5 - 12: 500$.
        > Wrong answered questions 13 - 15: 125 000$.
        > Correctly answered question 15: 1 000 000$.
 
-* The player is redirected to the main menu.
+  * The player is redirected to the main menu.
 
 
 3. ADD QUESTION:
-   * Before adding a new question the user is asked to enter a category and level of difficulty of the question.
+  * Before adding a new question the user is asked to enter a category and level of difficulty of the question.
    
-   * The user has to write the question.
+  * The user has to write the question.
        > NOTICE: A question mark '?' is expected to be put at the end of each question. 
        
   * The user has to write the available answer options. 
