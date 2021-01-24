@@ -189,7 +189,7 @@ void ModifyQuestion() {
         }
 
         // Display a message if the question does not exist.
-        Print(CENTER, "The question does not exist!", LINE);
+        Print(CENTER, "The question does not exist!\n", LINE);
     }
     Redirect();
 }
