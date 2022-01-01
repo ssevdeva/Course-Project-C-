@@ -397,7 +397,7 @@ void Lifelines(const Question& temp, const int questNum, bool& fiftyFifty, bool&
     cin >> yes_no;
 
     // Handle invalid input.
-    while (!(yes_no == "Y" or yes_no == "y" or yes_no == "N" or yes_no == "n")) {
+    while (!(yes_no == "Y" and yes_no == "y" and yes_no == "N" and yes_no == "n")) {
         cin.ignore();
         cin.clear();
         cin >> yes_no;
